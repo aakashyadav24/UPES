@@ -1,0 +1,266 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.impute import SimpleImputer
+
+#importing dataset
+df=pd.read_csv('Life.csv')
+print(df.info())
+
+
+# Select numeric features 
+numeric_features = df.select_dtypes(include=np.number)
+
+# Impute missing values in numeric features
+imputer = SimpleImputer(strategy='mean')
+imputed_data = pd.DataFrame(
+    imputer.fit_transform(numeric_features),
+    columns=numeric_features.columns
+)
+
+# Combine: imputed numeric data + Country column
+df = pd.concat([imputed_data, df[['Country']]], axis=1)
+
+# Check remaining null values
+df.isnull().sum()
+
+
+#data cleaning
+india= df[df['Country'].str.strip()=='India'].sort_values('Year')
+india[['Year','infant deaths','Adult Mortality','Alcohol']].head(15)
+
+
+#data analysis
+india[['Year','infant deaths','Adult Mortality','Alcohol']].describe()
+
+#Visual representation and analysis(for Year and infant mortality)
+x_year= india['Year'].values
+y_infant_deaths= india['infant deaths'].values
+plt.scatter(x_year, y_infant_deaths, color= 'red')
+plt.xlabel('Years')
+plt.ylabel('Infant Deaths')
+plt.title('Infant Mortality vs Year(India)')
+plt.show()
+
+#data exploration
+x_year = x_year.reshape(-1,1)
+x_year
+
+#traning model
+model= LinearRegression().fit(x_year, y_infant_deaths)
+model
+
+#model predictions
+prediction= model.predict(x_year)
+prediction
+
+#Data representation
+plt.scatter(x_year,y_infant_deaths, color='red')
+plt.plot(x_year,prediction, color='green')
+plt.xlabel('Years')
+plt.ylabel('Infant Deaths')
+plt.title('Model Predictions without train test split(India)')
+plt.show()
+
+
+#splitting data into training and testing(for year and infant mortality)
+x_train, x_test, y_train, y_test = train_test_split(
+    x_year, y_infant_deaths, train_size=0.7, test_size=0.3, random_state=42
+)
+print(f"X_train shape ={x_train.shape}")
+print(f"Y_train shape ={y_train.shape}")
+print(f"X_test shape ={x_test.shape}")
+print(f"Y_test shape ={x_test.shape}")
+
+# data representation for training data(for year and infant mortality)
+plt.scatter(x_train,y_train, color='green')
+plt.xlabel('Years')
+plt.ylabel('Infant Deaths')
+plt.title('Training data')
+plt.show()
+
+# data depresentation for testing data(for year and infant mortality)
+plt.scatter(x_test,y_test, color='red')
+plt.xlabel('Years')
+plt.ylabel('Infant Deaths')
+plt.title('Testing data')
+plt.show()
+
+#training the model(for infant deaths and year)
+model=LinearRegression()
+model.fit(x_train,y_train)
+
+
+#model predictions
+y_pred=model.predict(x_test)
+y_pred
+
+# 1. Weight (Slope)
+print("Weight (Slope) for Infant Mortality Prediction:", model.coef_)
+
+# 2. Bias (Intercept)
+print("Bias (Intercept) for Infant Mortality Prediction:", model.intercept_)
+
+
+from sklearn.metrics import mean_absolute_error,mean_squared_error
+from sklearn.metrics import r2_score
+# 1. Mean Squared Error (MSE)
+mse_inf = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error (MSE) for Infant Mortality Prediction:", mse_inf)
+
+# 2. Mean Absolute Error (MAE)
+mae_inf = mean_absolute_error(y_test, y_pred)
+print("Mean Absolute Error (MAE) for Infant Mortality Prediction:", mae_inf)
+
+# 2. R-square Error
+r2_inf= r2_score(y_test, y_pred)
+print("R² Score for Infant Mortality Prediction:", r2_inf)
+
+
+#Visual representation for Infant Mortality prediction
+plt.scatter(x_test,y_test, color= 'red')
+plt.plot(x_test, model.predict(x_test), color='blue')
+plt.title('Infant Mortality vs Years (India)')
+plt.xlabel('Years')
+plt.ylabel('Infant Deaths')
+plt.show()
+
+
+#Visual representation and analysis(for Year and adult mortality)
+x_year= india['Year'].values
+y_adult_mortality= india['Adult Mortality'].values
+plt.scatter(x_year, y_adult_mortality, color= 'red')
+plt.xlabel('Years')
+plt.ylabel('Adult Mortality')
+plt.title('Adult Mortality vs Year(India)')
+plt.show()
+
+
+#data exploration
+x_year = x_year.reshape(-1,1)
+x_year
+
+
+#splitting data into training and testing(for year and adult mortality)
+x_train, x_test, y_train, y_test = train_test_split(
+    x_year, y_adult_mortality, train_size=0.7, test_size=0.3, random_state=3
+)
+print(f"X_train shape ={x_train.shape}")
+print(f"Y_train shape ={y_train.shape}")
+print(f"X_test shape ={x_test.shape}")
+print(f"Y_test shape ={x_test.shape}")
+
+
+# data representation for training data(for year and adult mortality)
+plt.scatter(x_train,y_train, color='green')
+plt.xlabel('Years')
+plt.ylabel('Adult Mortality')
+plt.title('Training data')
+plt.show()
+
+# data depresentation for testing data(for year and adult mortality)
+plt.scatter(x_test,y_test, color='red')
+plt.xlabel('Years')
+plt.ylabel('Adult Mortality')
+plt.title('Testing data')
+plt.show()
+
+
+#training the model(for adult mortality and year)
+model_adu=LinearRegression()
+model_adu.fit(x_train,y_train)
+
+
+#model predictions
+y_pred=model_adu.predict(x_test)
+y_pred
+
+
+# 1. Weight (Slope)
+print("Weight (Slope) for Adult Mortality Prediction:", model_adu.coef_)
+
+# 2. Bias (Intercept)
+print("Bias (Intercept) for Adult Mortality Prediction:", model_adu.intercept_)
+
+
+from sklearn.metrics import mean_absolute_error,mean_squared_error
+from sklearn.metrics import r2_score
+# 1. Mean Squared Error (MSE) for Adult Mortality 
+mse_adu = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error (MSE) for Adult Mortality Prediction:", mse_adu)
+
+# 2. Mean Absolute Error (MAE) for Adult Mortality
+mae_adu = mean_absolute_error(y_test, y_pred)
+print("Mean Absolute Error (MAE) for Adult Mortality Prediction:", mae_adu)
+
+# 2. R-square Error for Adult Mortality
+r2_adu= r2_score(y_test, y_pred)
+print("R² Score for Adult Mortality Prediction:", r2_adu)
+
+
+#Visual representation for Adult Mortality prediction
+plt.scatter(x_test,y_test, color= 'red')
+plt.plot(x_test, model_adu.predict(x_test), color='blue')
+plt.title('Adult Mortality vs Years (India)')
+plt.xlabel('Years')
+plt.ylabel('Adult Mortality')
+plt.show()
+
+
+#data cleaning
+rus= df[df['Country'].str.strip()=='Russian Federation'].sort_values('Year')
+rus[['Year','infant deaths','Adult Mortality']].head(15)
+
+
+#data analysis
+rus[['Year','infant deaths','Adult Mortality']].describe()
+
+
+#Visual representation and analysis(for Year and infant mortality)
+x_year= rus['Year'].values
+y_infant_deaths= rus['infant deaths'].values
+plt.scatter(x_year, y_infant_deaths, color= 'red')
+plt.xlabel('Years')
+plt.ylabel('Infant Deaths')
+plt.title('Infant Mortality vs Year(Russia)')
+plt.show()
+
+
+y_infant_deaths
+
+
+#data exploration
+x_year = x_year.reshape(-1,1)
+x_year
+
+
+model_rus=LinearRegression().fit(x_year,y_infant_deaths)
+prediction=model_rus.predict(x_year)
+
+
+
+plt.scatter(x_year,y_infant_deaths,color='red')
+plt.plot(x_year,prediction,color='green')
+plt.xlabel('Years')
+plt.ylabel('Infant Deaths')
+plt.title('Model Predictions without train test split(Russia)')
+plt.show()
+
+
+from sklearn.metrics import mean_absolute_error,mean_squared_error
+from sklearn.metrics import r2_score
+# 1. Mean Squared Error (MSE) for Adult Mortality 
+mse_rus = mean_squared_error(y_infant_deaths, prediction)
+print("Mean Squared Error (MSE) for Infant Mortality Prediction:", mse_rus)
+
+# 2. Mean Absolute Error (MAE) for Adult Mortality
+mae_rus = mean_absolute_error(y_infant_deaths, prediction)
+print("Mean Absolute Error (MAE) for Infant Mortality Prediction:", mae_rus)
+
+# 2. R-square Error for Adult Mortality
+r2_rus= r2_score(y_infant_deaths, prediction)
+print("R² Score for Infant Mortality Prediction:", r2_rus)
+
+

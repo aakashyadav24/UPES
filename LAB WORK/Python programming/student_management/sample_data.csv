@@ -1,0 +1,6 @@
+student_id,name,gender,qualification,marks
+S001,Anita Sharma,Female,BSc,"78;85;91"
+S002,Raj Patel,Male,BCA,"65;72;60"
+S003,Sonal Verma,Female,MSc,"92;89;95"
+S004,Vikram Rao,Male,BE,"55;48;60"
+S005,Meena Joshi,Female,BSc,"88;79;84"

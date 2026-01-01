@@ -1,0 +1,50 @@
+[
+  {
+    "student_id": "59",
+    "name": "Aakash",
+    "gender": "Male",
+    "qualification": "Bsc",
+    "marks": [
+      23.0,
+      78.0,
+      99.0,
+      30.0
+    ],
+    "percentage": 57.5,
+    "average": 57.5,
+    "grade": "D"
+  },
+  {
+    "student_id": "23",
+    "name": "Sandeep",
+    "gender": "Male",
+    "qualification": "BA",
+    "marks": [
+      100.0,
+      69.0,
+      42.0,
+      88.0,
+      90.0
+    ],
+    "percentage": 77.8,
+    "average": 77.8,
+    "grade": "B"
+  },
+  {
+    "student_id": "56",
+    "name": "Shivansh",
+    "gender": "Male",
+    "qualification": "LLB",
+    "marks": [
+      99.0,
+      98.0,
+      97.0,
+      96.0,
+      95.0,
+      94.0
+    ],
+    "percentage": 96.5,
+    "average": 96.5,
+    "grade": "A+"
+  }
+]
